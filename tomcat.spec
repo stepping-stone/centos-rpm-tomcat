@@ -31,7 +31,7 @@
 %global jspspec 2.3
 %global major_version 8
 %global minor_version 0
-%global micro_version 12
+%global micro_version 18
 %global packdname apache-tomcat-%{version}-src
 %global servletspec 3.1
 %global elspec 3.0
@@ -657,7 +657,7 @@ fi
 %{_mavenpomdir}/JPP.%{name}-tomcat-coyote.pom
 %{_mavenpomdir}/JPP.%{name}-tomcat-util.pom
 %{_mavenpomdir}/JPP.%{name}-tomcat-jdbc.pom
-%{_datadir}/maven-fragments/%{name}
+%{_datadir}/maven-metadata/tomcat.xml
 %exclude %{libdir}/%{name}-el-%{elspec}-api.jar
 %exclude %{libdir}/log4j.jar
 
@@ -683,6 +683,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Sun Feb 15 2015 Ivan Afonichev <ivan.afonichev@gmail.com> 0:8.0.18-1
+- Updated to 8.0.18
+
 * Sat Sep 20 2014 Ivan Afonichev <ivan.afonichev@gmail.com> 0:8.0.12-1
 - Updated to 8.0.12
 - Substitute libnames in catalina-tasks.xml, resolves: rhbz#1126439
