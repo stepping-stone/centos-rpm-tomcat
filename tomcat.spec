@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         0
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -471,7 +471,7 @@ for pom in *.pom; do
 done
 
 # we won't install dbcp, juli-adapters and juli-extras pom files
-for libname in annotations-api catalina jasper-el jasper catalina-ha; do
+for libname in annotations-api catalina jasper-el jasper catalina-ha util-scan jni; do
     %{__cp} -a %{name}-$libname.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-$libname.pom
     %add_maven_depmap JPP.%{name}-$libname.pom %{name}/$libname.jar -f "tomcat-lib"
 done
@@ -683,6 +683,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Mon Feb 16 2015 Michal Srb <msrb@redhat.com> - 0:8.0.18-2
+- Install POM files for org.apache.tomcat:{tomcat-jni,tomcat-util-scan}
+
 * Sun Feb 15 2015 Ivan Afonichev <ivan.afonichev@gmail.com> 0:8.0.18-1
 - Updated to 8.0.18
 
