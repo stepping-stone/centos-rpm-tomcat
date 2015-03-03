@@ -52,9 +52,9 @@
 %global _systemddir /lib/systemd/system
 
 Name:          tomcat
-Epoch:         0
+Epoch:         1
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -683,6 +683,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Tue Mar 03 2015 Stephen Gallagher <sgallagh@redhat.com> 1:8.0.18-3
+- Bump epoch to maintain upgrade path from Fedora 22
+
 * Mon Feb 16 2015 Michal Srb <msrb@redhat.com> - 0:8.0.18-2
 - Install POM files for org.apache.tomcat:{tomcat-jni,tomcat-util-scan}
 
