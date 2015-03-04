@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         1
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -167,8 +167,6 @@ which allows tomcat to perform some privileged operations
 Group: Development/Libraries
 Summary: Apache Tomcat JSP API implementation classes
 Provides: jsp = %{jspspec}
-Provides: jsp22
-Provides: %{name}-jsp-2.2-api
 Obsoletes: %{name}-jsp-2.2-api
 Requires: %{name}-servlet-%{servletspec}-api = %{epoch}:%{version}-%{release}
 Requires: %{name}-el-%{elspec}-api = %{epoch}:%{version}-%{release}
@@ -207,7 +205,6 @@ Summary: Apache Tomcat Servlet API implementation classes
 Provides: servlet = %{servletspec}
 Provides: servlet6
 Provides: servlet3
-Provides: %{name}-servlet-3.0-api
 Obsoletes: %{name}-servlet-3.0-api
 Requires(post): chkconfig
 Requires(postun): chkconfig
@@ -218,9 +215,7 @@ Apache Tomcat Servlet API implementation classes.
 %package el-%{elspec}-api
 Group: Development/Libraries
 Summary: Expression Language v%{elspec} API
-Provides: el_1_0_api = %{epoch}:%{version}-%{release}
 Provides: el_api = %{elspec}
-Provides: %{name}-el-2.2-api
 Obsoletes: %{name}-el-2.2-api
 Requires(post): chkconfig
 Requires(postun): chkconfig
@@ -683,6 +678,10 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Wed Mar 4 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.18-4
+- Fix epoch bumped el_1_0_api that would override all other glassfish/jboss/etc. due to wrong epoch.
+- Drop old provides. 
+
 * Tue Mar 03 2015 Stephen Gallagher <sgallagh@redhat.com> 1:8.0.18-3
 - Bump epoch to maintain upgrade path from Fedora 22
 
