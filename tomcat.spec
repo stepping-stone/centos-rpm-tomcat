@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         1
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -94,7 +94,7 @@ BuildRequires: apache-commons-collections
 BuildRequires: apache-commons-daemon
 BuildRequires: apache-commons-dbcp
 BuildRequires: apache-commons-pool
-BuildRequires: jakarta-taglibs-standard
+BuildRequires: tomcat-taglibs-standard
 BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: jpackage-utils >= 0:1.7.0
 BuildRequires: junit
@@ -227,7 +227,7 @@ Expression Language %{elspec}.
 Group: Applications/Internet
 Summary: The ROOT and examples web applications for Apache Tomcat
 Requires: %{name} = %{epoch}:%{version}-%{release}
-Requires: jakarta-taglibs-standard >= 0:1.1
+Requires: tomcat-taglibs-standard >= 0:1.1
 
 %description webapps
 The ROOT and examples web applications for Apache Tomcat.
@@ -240,8 +240,8 @@ find . -type f \( -name "*.bat" -o -name "*.class" -o -name Thumbs.db -o -name "
 
 %patch0 -p0
 %patch1 -p0
-%{__ln_s} $(build-classpath jakarta-taglibs-core) webapps/examples/WEB-INF/lib/jstl.jar
-%{__ln_s} $(build-classpath jakarta-taglibs-standard) webapps/examples/WEB-INF/lib/standard.jar
+%{__ln_s} $(build-classpath tomcat-taglibs-standard/taglibs-standard-impl) webapps/examples/WEB-INF/lib/jstl.jar
+%{__ln_s} $(build-classpath tomcat-taglibs-standard/taglibs-standard-compat) webapps/examples/WEB-INF/lib/standard.jar
 
 %build
 export OPT_JAR_LIST="xalan-j2-serializer"
@@ -409,7 +409,7 @@ pushd output/build
     # need to use -p here with b-j-r otherwise the examples webapp fails to
     # load with a java.io.IOException
     %{_bindir}/build-jar-repository -p webapps/examples/WEB-INF/lib \
-    taglibs-core.jar taglibs-standard.jar 2>&1
+    tomcat-taglibs-standard/taglibs-standard-impl.jar tomcat-taglibs-standard/taglibs-standard-compat.jar 2>&1
 popd
 
 pushd ${RPM_BUILD_ROOT}%{libdir}
@@ -452,8 +452,8 @@ echo '<Context allowLinking="true"/>'>>context.xml
 popd
 
 pushd ${RPM_BUILD_ROOT}%{appdir}/examples/WEB-INF/lib
-%{__ln_s} -f $(build-classpath jakarta-taglibs-core) jstl.jar
-%{__ln_s} -f $(build-classpath jakarta-taglibs-standard) standard.jar
+%{__ln_s} -f $(build-classpath tomcat-taglibs-standard/taglibs-standard-impl) jstl.jar
+%{__ln_s} -f $(build-classpath tomcat-taglibs-standard/taglibs-standard-compat) standard.jar
 popd
 
 
@@ -678,6 +678,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Thu Mar 5 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.18-5
+- Rebuild against tomcat-taglibs-standard.
+
 * Wed Mar 4 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.18-4
 - Fix epoch bumped el_1_0_api that would override all other glassfish/jboss/etc. due to wrong epoch.
 - Drop old provides. 
