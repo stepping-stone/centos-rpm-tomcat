@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         1
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -466,10 +466,18 @@ for pom in *.pom; do
 done
 
 # we won't install dbcp, juli-adapters and juli-extras pom files
-for libname in annotations-api catalina jasper-el jasper catalina-ha util-scan jni; do
+for libname in annotations-api catalina jasper-el jasper catalina-ha; do
     %{__cp} -a %{name}-$libname.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-$libname.pom
     %add_maven_depmap JPP.%{name}-$libname.pom %{name}/$libname.jar -f "tomcat-lib"
 done
+
+# tomcat-util-scan
+%{__cp} -a %{name}-util-scan.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-util-scan.pom
+%add_maven_depmap JPP.%{name}-util-scan.pom %{name}/%{name}-util-scan.jar -f "tomcat-lib"
+
+# tomcat-jni
+%{__cp} -a %{name}-jni.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-jni.pom
+%add_maven_depmap JPP.%{name}-jni.pom %{name}/%{name}-jni.jar -f "tomcat-lib"
 
 # servlet-api jsp-api and el-api are not in tomcat subdir, since they are widely re-used elsewhere
 %{__cp} -a tomcat-jsp-api.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP-tomcat-jsp-api.pom
@@ -678,6 +686,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Tue Jun 09 2015 Michal Srb <msrb@redhat.com> - 1:8.0.20-2
+- Fix metadata for org.apache.tomcat:{tomcat-jni,tomcat-util-scan}
+
 * Thu Mar 5 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.18-5
 - Rebuild against tomcat-taglibs-standard.
 
