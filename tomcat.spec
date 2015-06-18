@@ -31,7 +31,7 @@
 %global jspspec 2.3
 %global major_version 8
 %global minor_version 0
-%global micro_version 20
+%global micro_version 23
 %global packdname apache-tomcat-%{version}-src
 %global servletspec 3.1
 %global elspec 3.0
@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         1
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -686,6 +686,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Thu Jun 18 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.23-1
+- Update to 8.0.23.
+
 * Thu Jun 18 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.20-3
 - Drop jetty alias for servlet.
 
