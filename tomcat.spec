@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         1
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -484,7 +484,7 @@ done
 %add_maven_depmap JPP-tomcat-jsp-api.pom tomcat-jsp-api.jar -f "tomcat-jsp-api" -a "org.eclipse.jetty.orbit:javax.servlet.jsp"
 
 %{__cp} -a tomcat-el-api.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP-tomcat-el-api.pom
-%add_maven_depmap JPP-tomcat-el-api.pom tomcat-el-api.jar -f "tomcat-el-api" -a "org.eclipse.jetty.orbit:javax.el,javax.el:el-api"
+%add_maven_depmap JPP-tomcat-el-api.pom tomcat-el-api.jar -f "tomcat-el-api" -a "org.eclipse.jetty.orbit:javax.el"
 
 %{__cp} -a tomcat-servlet-api.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP-tomcat-servlet-api.pom
 # Generate a depmap fragment javax.servlet:servlet-api pointing to
@@ -686,6 +686,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Fri Jun 19 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.23-2
+- Drop javax.el:el-api alias.
+
 * Thu Jun 18 2015 Alexander Kurtakov <akurtako@redhat.com> 1:8.0.23-1
 - Update to 8.0.23.
 
