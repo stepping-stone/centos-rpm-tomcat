@@ -526,7 +526,7 @@ EOF
 # add the tomcat user and group
 %{_sbindir}/groupadd -g %{tcuid} -r tomcat 2>/dev/null || :
 %{_sbindir}/useradd -c "Apache Tomcat" -u %{tcuid} -g tomcat \
-    -s /bin/nologin -r -d %{homedir} tomcat 2>/dev/null || :
+    -s /sbin/nologin -r -d %{homedir} tomcat 2>/dev/null || :
 
 %post
 # install but don't activate
@@ -690,6 +690,7 @@ fi
 %changelog
 * Wed Feb 10 2016 Coty Sutherland <csutherl@redhat.com> 1:8.0.26-3
 - Resolves: rhbz#1286800 Failed to start component due to wrong allowLinking="true" in context.xml
+- Program /bin/nologin does not exist (#1302718)
 
 * Tue Nov 11 2015 Robert Scheck <robert@fedoraproject.org> 1:8.0.26-2
 - CATALINA_OPTS are only read when SECURITY_MANAGER is true (#1147105)
