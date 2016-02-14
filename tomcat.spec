@@ -57,7 +57,7 @@
 Name:          tomcat
 Epoch:         1
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -675,11 +675,13 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Sun Feb 14 2016 Ivan Afonichev <ivan.afonichev@gmail.com> - 1:8.0.32-2
+- Recommend tomcat-native, resolves: rhbz#1243132
+
 * Thu Feb 11 2016 Ivan Afonichev <ivan.afonichev@gmail.com> - 1:8.0.32-1
 - Updated to 8.0.32
 - Remove log4j support. It has never been working actually. See rhbz#1236297
 - Move shipped config to /etc/sysconfig/tomcat. /etc/tomcat/tomcat.conf can now be used to override it with shell expansion, resolves rhbz#1293636
-- Recommend tomcat-native, resolves: rhbz#1243132
 
 * Wed Feb 10 2016 Coty Sutherland <csutherl@redhat.com> 1:8.0.26-3
 - Resolves: rhbz#1286800 Failed to start component due to wrong allowLinking="true" in context.xml
