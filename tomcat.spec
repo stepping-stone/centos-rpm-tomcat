@@ -36,9 +36,6 @@
 %global servletspec 3.1
 %global elspec 3.0
 %global tcuid 91
-#Recommended version is specified in java/org/apache/catalina/core/AprLifecycleListener.java
-%global native_version 1.1.33
-
 
 # FHS 2.3 compliant tree structure - http://www.pathname.com/fhs/2.3/
 %global basedir %{_var}/lib/%{name}
@@ -113,7 +110,6 @@ Requires:      java-headless >= 1:1.6.0
 Requires:      jpackage-utils
 Requires:      procps
 Requires:      %{name}-lib = %{epoch}:%{version}-%{release}
-Recommends:    tomcat-native >= %{native_version}
 Requires(pre):    shadow-utils
 Requires(post):   chkconfig
 Requires(preun):  chkconfig
