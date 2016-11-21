@@ -87,26 +87,9 @@ Patch2:        %{name}-8.0.36-CompilerOptionsV9.patch
 
 BuildArch:     noarch
 
-BuildRequires: ant
-BuildRequires: ecj >= 1:4.4.0
 BuildRequires: findutils
-BuildRequires: apache-commons-collections
-BuildRequires: apache-commons-daemon
-BuildRequires: apache-commons-dbcp
-BuildRequires: apache-commons-pool
-BuildRequires: tomcat-taglibs-standard
-BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: jpackage-utils >= 0:1.7.0
-BuildRequires: junit
-BuildRequires: geronimo-jaxrpc
-BuildRequires: wsdl4j
 BuildRequires: systemd-units
-Requires:      apache-commons-daemon
-Requires:      apache-commons-logging
-Requires:      apache-commons-collections
-Requires:      apache-commons-dbcp
-Requires:      apache-commons-pool
-Requires:      java-headless >= 1:1.6.0
 Requires:      jpackage-utils
 Requires:      procps
 Requires:      %{name}-lib = %{epoch}:%{version}-%{release}
@@ -184,10 +167,6 @@ Summary: Libraries needed to run the Tomcat Web container
 Requires: %{name}-jsp-%{jspspec}-api = %{epoch}:%{version}-%{release}
 Requires: %{name}-servlet-%{servletspec}-api = %{epoch}:%{version}-%{release}
 Requires: %{name}-el-%{elspec}-api = %{epoch}:%{version}-%{release}
-Requires: ecj >= 1:4.2.1
-Requires: apache-commons-collections
-Requires: apache-commons-dbcp
-Requires: apache-commons-pool
 Requires(preun): coreutils
 
 %description lib
@@ -221,7 +200,6 @@ Expression Language %{elspec}.
 Group: Applications/Internet
 Summary: The ROOT and examples web applications for Apache Tomcat
 Requires: %{name} = %{epoch}:%{version}-%{release}
-Requires: tomcat-taglibs-standard >= 0:1.1
 
 %description webapps
 The ROOT and examples web applications for Apache Tomcat.
@@ -230,14 +208,11 @@ The ROOT and examples web applications for Apache Tomcat.
 %setup -q -n %{packdname}
 # remove pre-built binaries and windows files
 find . -type f \( -name "*.bat" -o -name "*.class" -o -name Thumbs.db -o -name "*.gz" -o \
-   -name "*.jar" -o -name "*.war" -o -name "*.zip" \) -delete
+   -name "*.jar" -o -name "*.war" -o -name "*.zip" \) -not -name taglibs*.jar -delete
 
 %patch0 -p0
 %patch1 -p0
 %patch2 -p0
-
-%{__ln_s} $(build-classpath tomcat-taglibs-standard/taglibs-standard-impl) webapps/examples/WEB-INF/lib/jstl.jar
-%{__ln_s} $(build-classpath tomcat-taglibs-standard/taglibs-standard-compat) webapps/examples/WEB-INF/lib/standard.jar
 
 %build
 export OPT_JAR_LIST="xalan-j2-serializer"
@@ -250,22 +225,8 @@ export OPT_JAR_LIST="xalan-j2-serializer"
    touch HACKDIR/LICENSE
 
    # who needs a build.properties file anyway
-   %{ant} -Dbase.path="." \
+   %{ant} -Dbase.path="/home/build/tomcat-build-libs" \
       -Dbuild.compiler="modern" \
-      -Dcommons-collections.jar="$(build-classpath apache-commons-collections)" \
-      -Dcommons-daemon.jar="$(build-classpath apache-commons-daemon)" \
-      -Dcommons-daemon.native.src.tgz="HACK" \
-      -Djasper-jdt.jar="$(build-classpath ecj)" \
-      -Djdt.jar="$(build-classpath ecj)" \
-      -Dtomcat-native.tar.gz="HACK" \
-      -Dtomcat-native.home="." \
-      -Dtomcat-native.win.path="HACKDIR" \
-      -Dcommons-daemon.native.win.mgr.exe="HACK" \
-      -Dnsis.exe="HACK" \
-      -Djaxrpc-lib.jar="$(build-classpath jaxrpc)" \
-      -Dwsdl4j-lib.jar="$(build-classpath wsdl4j)" \
-      -Dcommons-pool.home="HACKDIR" \
-      -Dcommons-dbcp.home="HACKDIR" \
       -Dno.build.dbcp=true \
       -Dversion="%{version}" \
       -Dversion.build="%{micro_version}" \
@@ -273,8 +234,7 @@ export OPT_JAR_LIST="xalan-j2-serializer"
       deploy dist-prepare dist-source javadoc
 
     # remove some jars that we'll replace with symlinks later
-   %{__rm} output/build/bin/commons-daemon.jar \
-           output/build/lib/ecj.jar
+   %{__rm} output/build/bin/commons-daemon.jar
 
     # remove the cruft we created
    %{__rm} output/build/bin/tomcat-native.tar.gz
@@ -397,24 +357,11 @@ pushd ${RPM_BUILD_ROOT}%{_javadir}
    %{__ln_s} %{name}-el-%{elspec}-api.jar %{name}-el-api.jar
 popd
 
-pushd output/build
-    %{_bindir}/build-jar-repository lib apache-commons-collections \
-                                        apache-commons-dbcp apache-commons-pool ecj 2>&1
-    # need to use -p here with b-j-r otherwise the examples webapp fails to
-    # load with a java.io.IOException
-    %{_bindir}/build-jar-repository -p webapps/examples/WEB-INF/lib \
-    tomcat-taglibs-standard/taglibs-standard-impl.jar tomcat-taglibs-standard/taglibs-standard-compat.jar 2>&1
-popd
-
 pushd ${RPM_BUILD_ROOT}%{libdir}
     # symlink JSP and servlet API jars
     %{__ln_s} ../../java/%{name}-jsp-%{jspspec}-api.jar .
     %{__ln_s} ../../java/%{name}-servlet-%{servletspec}-api.jar .
     %{__ln_s} ../../java/%{name}-el-%{elspec}-api.jar .
-    %{__ln_s} $(build-classpath apache-commons-collections) commons-collections.jar
-    %{__ln_s} $(build-classpath apache-commons-dbcp) commons-dbcp.jar
-    %{__ln_s} $(build-classpath apache-commons-pool) commons-pool.jar
-    %{__ln_s} $(build-classpath ecj) jasper-jdt.jar
 
     # Temporary copy the juli jar here from /usr/share/java/tomcat (for maven depmap)
     %{__cp} -a ${RPM_BUILD_ROOT}%{bindir}/tomcat-juli.jar ./
@@ -446,10 +393,6 @@ echo '  <Resources allowLinking="true" />' >> context.xml
 echo '</Context>' >> context.xml
 popd
 
-pushd ${RPM_BUILD_ROOT}%{appdir}/examples/WEB-INF/lib
-%{__ln_s} -f $(build-classpath tomcat-taglibs-standard/taglibs-standard-impl) jstl.jar
-%{__ln_s} -f $(build-classpath tomcat-taglibs-standard/taglibs-standard-compat) standard.jar
-popd
 
 
 # Install the maven metadata
@@ -467,12 +410,12 @@ for libname in annotations-api catalina jasper-el jasper catalina-ha; do
 done
 
 # tomcat-util-scan
-%{__cp} -a %{name}-util-scan.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-util-scan.pom
-%add_maven_depmap JPP.%{name}-util-scan.pom %{name}/%{name}-util-scan.jar -f "tomcat-lib"
+%{__cp} -a %{name}-util-scan.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-%{name}-util-scan.pom
+%add_maven_depmap JPP.%{name}-%{name}-util-scan.pom %{name}/%{name}-util-scan.jar -f "tomcat-lib"
 
 # tomcat-jni
-%{__cp} -a %{name}-jni.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-jni.pom
-%add_maven_depmap JPP.%{name}-jni.pom %{name}/%{name}-jni.jar -f "tomcat-lib"
+%{__cp} -a %{name}-jni.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP.%{name}-%{name}-jni.pom
+%add_maven_depmap JPP.%{name}-%{name}-jni.pom %{name}/%{name}-jni.jar -f "tomcat-lib"
 
 # servlet-api jsp-api and el-api are not in tomcat subdir, since they are widely re-used elsewhere
 %{__cp} -a tomcat-jsp-api.pom ${RPM_BUILD_ROOT}%{_mavenpomdir}/JPP-tomcat-jsp-api.pom
@@ -654,7 +597,7 @@ fi
 %{_mavenpomdir}/JPP.%{name}-tomcat-jdbc.pom
 %{_mavenpomdir}/JPP.%{name}-websocket-api.pom
 %{_mavenpomdir}/JPP.%{name}-tomcat-websocket.pom
-%{_datadir}/maven-metadata/tomcat.xml
+%{_datadir}/maven-fragments/tomcat
 %exclude %{libdir}/%{name}-el-%{elspec}-api.jar
 
 %files servlet-%{servletspec}-api -f output/dist/src/res/maven/.mfiles-tomcat-servlet-api
