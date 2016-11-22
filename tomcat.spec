@@ -92,7 +92,6 @@ BuildRequires: jpackage-utils >= 0:1.7.0
 BuildRequires: systemd-units
 Requires:      jpackage-utils
 Requires:      procps
-Requires:      %{name}-lib = %{epoch}:%{version}-%{release}
 Requires(pre):    shadow-utils
 Requires(post):   chkconfig
 Requires(preun):  chkconfig
@@ -147,54 +146,6 @@ Requires: apache-commons-daemon-jsvc
 Systemd service to start tomcat with jsvc,
 which allows tomcat to perform some privileged operations
 (e.g. bind to a port < 1024) and then switch identity to a non-privileged user.
-
-%package jsp-%{jspspec}-api
-Group: Development/Libraries
-Summary: Apache Tomcat JSP API implementation classes
-Provides: jsp = %{jspspec}
-Obsoletes: %{name}-jsp-2.2-api
-Requires: %{name}-servlet-%{servletspec}-api = %{epoch}:%{version}-%{release}
-Requires: %{name}-el-%{elspec}-api = %{epoch}:%{version}-%{release}
-Requires(post): chkconfig
-Requires(postun): chkconfig
-
-%description jsp-%{jspspec}-api
-Apache Tomcat JSP API implementation classes.
-
-%package lib
-Group: Development/Libraries
-Summary: Libraries needed to run the Tomcat Web container
-Requires: %{name}-jsp-%{jspspec}-api = %{epoch}:%{version}-%{release}
-Requires: %{name}-servlet-%{servletspec}-api = %{epoch}:%{version}-%{release}
-Requires: %{name}-el-%{elspec}-api = %{epoch}:%{version}-%{release}
-Requires(preun): coreutils
-
-%description lib
-Libraries needed to run the Tomcat Web container.
-
-%package servlet-%{servletspec}-api
-Group: Development/Libraries
-Summary: Apache Tomcat Servlet API implementation classes
-Provides: servlet = %{servletspec}
-Provides: servlet6
-Provides: servlet3
-Obsoletes: %{name}-servlet-3.0-api
-Requires(post): chkconfig
-Requires(postun): chkconfig
-
-%description servlet-%{servletspec}-api
-Apache Tomcat Servlet API implementation classes.
-
-%package el-%{elspec}-api
-Group: Development/Libraries
-Summary: Expression Language v%{elspec} API
-Provides: el_api = %{elspec}
-Obsoletes: %{name}-el-2.2-api
-Requires(post): chkconfig
-Requires(postun): chkconfig
-
-%description el-%{elspec}-api
-Expression Language %{elspec}.
 
 %package webapps
 Group: Applications/Internet
@@ -471,15 +422,12 @@ done
 # install but don't activate
 %systemd_post %{name}.service
 
-%post jsp-%{jspspec}-api
 %{_sbindir}/update-alternatives --install %{_javadir}/jsp.jar jsp \
     %{_javadir}/%{name}-jsp-%{jspspec}-api.jar 20200
 
-%post servlet-%{servletspec}-api
 %{_sbindir}/update-alternatives --install %{_javadir}/servlet.jar servlet \
     %{_javadir}/%{name}-servlet-%{servletspec}-api.jar 30000
 
-%post el-%{elspec}-api
 %{_sbindir}/update-alternatives --install %{_javadir}/elspec.jar elspec \
    %{_javadir}/%{name}-el-%{elspec}-api.jar 20300
 
@@ -491,19 +439,16 @@ done
 %postun
 %systemd_postun_with_restart %{name}.service 
 
-%postun jsp-%{jspspec}-api
 if [ "$1" = "0" ]; then
     %{_sbindir}/update-alternatives --remove jsp \
         %{_javadir}/%{name}-jsp-%{jspspec}-api.jar
 fi
 
-%postun servlet-%{servletspec}-api
 if [ "$1" = "0" ]; then
     %{_sbindir}/update-alternatives --remove servlet \
         %{_javadir}/%{name}-servlet-%{servletspec}-api.jar
 fi
 
-%postun el-%{elspec}-api
 if [ "$1" = "0" ]; then
     %{_sbindir}/update-alternatives --remove elspec \
         %{_javadir}/%{name}-el-%{elspec}-api.jar
@@ -564,24 +509,12 @@ fi
 %{homedir}/logs
 %{homedir}/conf
 
-%files admin-webapps
-%defattr(0664,root,tomcat,0755)
-%{appdir}/host-manager
-%{appdir}/manager
-
-%files docs-webapp
-%defattr(-,root,root,-)
-%{appdir}/docs
-
-%files javadoc
-%defattr(-,root,root,-)
-%{_javadocdir}/%{name}
-
-%files jsp-%{jspspec}-api -f output/dist/src/res/maven/.mfiles-tomcat-jsp-api
 %defattr(-,root,root,-)
 %{_javadir}/%{name}-jsp-%{jspspec}*.jar
+%{_javadir}/%{name}-jsp-api.jar
+%{_mavenpomdir}/JPP-%{name}-jsp-api.pom
+%{_mavendepmapfragdir}/%{name}-tomcat-jsp-api
 
-%files lib -f output/dist/src/res/maven/.mfiles-tomcat-lib
 %defattr(-,root,root,-)
 %{libdir}
 %{bindir}/tomcat-juli.jar
@@ -598,19 +531,41 @@ fi
 %{_mavenpomdir}/JPP.%{name}-tomcat-jdbc.pom
 %{_mavenpomdir}/JPP.%{name}-websocket-api.pom
 %{_mavenpomdir}/JPP.%{name}-tomcat-websocket.pom
-%{_datadir}/maven-fragments/tomcat
-%exclude %{libdir}/%{name}-el-%{elspec}-api.jar
+%{_mavenpomdir}/JPP.%{name}-%{name}-util-scan.pom
+%{_mavenpomdir}/JPP.%{name}-%{name}-jni.pom
+%{_mavendepmapfragdir}/%{name}
+%{_mavendepmapfragdir}/%{name}-tomcat-lib
+#%exclude %{libdir}/%{name}-el-%{elspec}-api.jar
 
-%files servlet-%{servletspec}-api -f output/dist/src/res/maven/.mfiles-tomcat-servlet-api
 %defattr(-,root,root,-)
 %doc LICENSE
 %{_javadir}/%{name}-servlet-%{servletspec}*.jar
+%{_javadir}/%{name}-servlet-api.jar
+%{_mavendepmapfragdir}/%{name}-tomcat-servlet-api
+%{_mavenpomdir}/JPP-%{name}-servlet-api.pom
 
-%files el-%{elspec}-api -f output/dist/src/res/maven/.mfiles-tomcat-el-api
 %defattr(-,root,root,-)
 %doc LICENSE
 %{_javadir}/%{name}-el-%{elspec}-api.jar
+%{_javadir}/%{name}-el-api.jar
+%{_mavenpomdir}/JPP-%{name}-el-api.pom
+%{_mavendepmapfragdir}/%{name}-tomcat-el-api
 %{libdir}/%{name}-el-%{elspec}-api.jar
+
+
+
+%files admin-webapps
+%defattr(0664,root,tomcat,0755)
+%{appdir}/host-manager
+%{appdir}/manager
+
+%files docs-webapp
+%defattr(-,root,root,-)
+%{appdir}/docs
+
+%files javadoc
+%defattr(-,root,root,-)
+%{_javadocdir}/%{name}
 
 %files webapps
 %defattr(0644,tomcat,tomcat,0755)
