@@ -30,8 +30,8 @@
 
 %global jspspec 2.3
 %global major_version 8
-%global minor_version 0
-%global micro_version 38
+%global minor_version 5
+%global micro_version 8
 %global packdname apache-tomcat-%{version}-src
 %global servletspec 3.1
 %global elspec 3.0
@@ -551,6 +551,7 @@ fi
 %config(noreplace) %{confdir}/*.properties
 %config(noreplace) %{confdir}/context.xml
 %config(noreplace) %{confdir}/server.xml
+%config(noreplace) %{confdir}/jaspic-providers.xml
 %attr(0640,root,tomcat) %config(noreplace) %{confdir}/tomcat-users.xml
 %config(noreplace) %{confdir}/web.xml
 %dir %{homedir}

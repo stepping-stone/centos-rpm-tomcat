@@ -4,10 +4,28 @@
 
 MAIN_CLASS=org.apache.catalina.startup.Bootstrap
 
+if [ -z "$JSSE_OPTS" ] ; then
+  JSSE_OPTS="-Djdk.tls.ephemeralDHKeySize=2048"
+fi
+JAVA_OPTS="$JAVA_OPTS $JSSE_OPTS"
+
+# Register custom URL handlers
+# Do this here so custom URL handles (specifically 'war:...') can be used in the security policy
+JAVA_OPTS="$JAVA_OPTS -Djava.protocol.handler.pkgs=org.apache.catalina.webresources"
+
+# Set UMASK unless it has been overridden
+if [ -z "$UMASK" ]; then
+    UMASK="0027"
+fi
+umask $UMASK
+
+# Uncomment the following line to make the umask available when using the
+# org.apache.catalina.security.SecurityListener
+#JAVA_OPTS="$JAVA_OPTS -Dorg.apache.catalina.security.SecurityListener.UMASK=`umask`"
+
 FLAGS="$JAVA_OPTS"
 OPTIONS="-Dcatalina.base=$CATALINA_BASE \
 -Dcatalina.home=$CATALINA_HOME \
--Djava.endorsed.dirs=$JAVA_ENDORSED_DIRS \
 -Djava.io.tmpdir=$CATALINA_TMPDIR \
 -Djava.util.logging.config.file=${LOGGING_PROPERTIES} \
 -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager"
