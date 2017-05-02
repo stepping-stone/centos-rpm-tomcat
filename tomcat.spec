@@ -92,6 +92,7 @@ BuildArch:     noarch
 BuildRequires: findutils
 BuildRequires: systemd-units
 BuildRequires: ant
+BuildRequires: java-1.7.0-openjdk-devel
 Requires:      java
 Requires:      procps
 Requires(pre):    shadow-utils
