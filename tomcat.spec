@@ -88,9 +88,9 @@ Patch2:        %{name}-8.0.36-CompilerOptionsV9.patch
 BuildArch:     noarch
 
 BuildRequires: findutils
-BuildRequires: jpackage-utils >= 0:1.7.0
 BuildRequires: systemd-units
-Requires:      jpackage-utils
+BuildRequires: ant
+Requires:      java
 Requires:      procps
 Requires(pre):    shadow-utils
 Requires(post):   chkconfig
@@ -131,7 +131,6 @@ The docs web application for Apache Tomcat.
 %package javadoc
 Group: Documentation
 Summary: Javadoc generated documentation for Apache Tomcat
-Requires: jpackage-utils
 
 %description javadoc
 Javadoc generated documentation for Apache Tomcat.
@@ -580,6 +579,11 @@ fi
 %attr(0660,tomcat,tomcat) %verify(not size md5 mtime) %{logdir}/catalina.out
 
 %changelog
+* Tue May 02 2017 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.14-2
+- Remove dependecy: jpackage-utils (not part of CentOS 7)
+- Add build time dependency: ant
+- Add dependency: java
+
 * Tue May 02 2017 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.14-1
 - Update to 8.5.14
 
