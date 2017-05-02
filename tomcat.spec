@@ -92,10 +92,7 @@ BuildArch:     noarch
 BuildRequires: findutils
 BuildRequires: systemd-units
 BuildRequires: ant
-BuildRequires: java-1.7.0-openjdk-devel
-BuildRequires: jpackage-utils >= 0:1.7.0
 Requires:      java
-Requires: jpackage-utils
 Requires:      procps
 Requires(pre):    shadow-utils
 Requires(post):   chkconfig
@@ -585,6 +582,9 @@ fi
 %attr(0660,tomcat,tomcat) %verify(not size md5 mtime) %{logdir}/catalina.out
 
 %changelog
+* Tue May 02 2017 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.14-3
+- Ant build to /tmp instead of /home/build which may be prevented by privileges
+
 * Tue May 02 2017 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.14-3
 - Remove failonwarning from ant options which requires ant 1.9.4, not part of CentOS 7
 
