@@ -93,7 +93,9 @@ BuildRequires: findutils
 BuildRequires: systemd-units
 BuildRequires: ant
 BuildRequires: java-1.7.0-openjdk-devel
+BuildRequires: jpackage-utils >= 0:1.7.0
 Requires:      java
+Requires: jpackage-utils
 Requires:      procps
 Requires(pre):    shadow-utils
 Requires(post):   chkconfig
@@ -179,7 +181,7 @@ export OPT_JAR_LIST="xalan-j2-serializer"
    touch HACKDIR/LICENSE
 
    # who needs a build.properties file anyway
-   %{ant} -Dbase.path="/home/build/tomcat-build-libs" \
+   %{ant} -Dbase.path="/tmp/tomcat-build-libs" \
       -Dbuild.compiler="modern" \
       -Dno.build.dbcp=true \
       -Dversion="%{version}" \
