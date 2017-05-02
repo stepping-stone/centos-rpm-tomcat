@@ -84,6 +84,8 @@ Source32:      tomcat-named.service
 Patch0:        %{name}-%{major_version}.%{minor_version}-bootstrap-MANIFEST.MF.patch
 Patch1:        %{name}-%{major_version}.%{minor_version}-tomcat-users-webapp.patch
 Patch2:        %{name}-8.0.36-CompilerOptionsV9.patch
+Patch3:        %{name}-ant_no_failonwarning.patch
+
 
 BuildArch:     noarch
 
@@ -163,6 +165,7 @@ find . -type f \( -name "*.bat" -o -name "*.class" -o -name Thumbs.db -o -name "
 %patch0 -p0
 %patch1 -p0
 %patch2 -p0
+%patch3 -p0
 
 %build
 export OPT_JAR_LIST="xalan-j2-serializer"
@@ -579,6 +582,9 @@ fi
 %attr(0660,tomcat,tomcat) %verify(not size md5 mtime) %{logdir}/catalina.out
 
 %changelog
+* Tue May 02 2017 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.14-3
+- Remove failonwarning from ant options which requires ant 1.9.4, not part of CentOS 7
+
 * Tue May 02 2017 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.14-2
 - Remove dependecy: jpackage-utils (not part of CentOS 7)
 - Add build time dependency: ant

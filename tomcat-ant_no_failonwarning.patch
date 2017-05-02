@@ -1,0 +1,52 @@
+--- build.xml~	2017-05-02 11:28:15.906000000 +0200
++++ build.xml	2017-05-02 11:28:49.516000000 +0200
+@@ -1756,8 +1756,7 @@
+       charset="UTF-8"
+       additionalparam="-breakiterator -notimestamp"
+       maxmemory="512m"
+-      failonerror="true"
+-      failonwarning="true">
++      failonerror="true">
+       <classpath>
+         <path refid="compile.classpath"/>
+         <path refid="tomcat.webservices.classpath"/>
+@@ -1777,8 +1776,7 @@
+       charset="UTF-8"
+       additionalparam="-breakiterator -notimestamp"
+       maxmemory="512m"
+-      failonerror="true"
+-      failonwarning="true">
++      failonerror="true">
+       <classpath>
+         <path refid="compile.classpath"/>
+         <path refid="tomcat.webservices.classpath"/>
+@@ -1798,8 +1796,7 @@
+       charset="UTF-8"
+       additionalparam="-breakiterator -notimestamp"
+       maxmemory="512m"
+-      failonerror="true"
+-      failonwarning="true">
++      failonerror="true">
+       <classpath>
+         <path refid="compile.classpath"/>
+         <path refid="tomcat.webservices.classpath"/>
+@@ -1819,8 +1816,7 @@
+       charset="UTF-8"
+       additionalparam="-breakiterator -notimestamp"
+       maxmemory="512m"
+-      failonerror="true"
+-      failonwarning="true">
++      failonerror="true">
+       <classpath>
+         <path refid="compile.classpath"/>
+         <path refid="tomcat.webservices.classpath"/>
+@@ -1839,8 +1835,7 @@
+       charset="UTF-8"
+       additionalparam="-breakiterator -notimestamp"
+       maxmemory="512m"
+-      failonerror="true"
+-      failonwarning="true">
++      failonerror="true">
+       <classpath>
+         <path refid="compile.classpath"/>
+         <path refid="tomcat.webservices.classpath"/>
