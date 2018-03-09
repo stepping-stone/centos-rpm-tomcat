@@ -579,6 +579,10 @@ fi
 %attr(0660,tomcat,tomcat) %verify(not size md5 mtime) %{logdir}/catalina.out
 
 %changelog
+* Fri Mar 09 2018 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.28-1
+- Update to 8.5.28
+- tomcat-native.tar.gz not downloaded by default. No need to remove it
+
 * Tue May 02 2017 Niklaus Hofer <niklaus.hofer@stepping-stone.ch> - 1:8.5.14-3
 - Ant build to /tmp instead of /home/build which may be prevented by privileges
 
