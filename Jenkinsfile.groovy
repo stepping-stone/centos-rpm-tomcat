@@ -5,13 +5,6 @@
 
 pipeline {
     agent any
-    parameters {
-        // Define any parameters which you would like to ask from the user here
-        string(name: 'param1', defaultValue: 'value1', description: 'Description')
-    }
-    environment {
-        var1: value1
-    }
     stages{
         stage('checkout'){
             steps {
