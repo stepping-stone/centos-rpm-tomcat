@@ -30,7 +30,7 @@ pipeline {
                 // Use any command as if it is installed on the Jenkins Server. It will be transparently executed inside the Docker container named
                 // in the agent section above
                 // The command /usr/bin/mkRPMBuild-simple.sh is a script made by sst-twe to simplify invoking of the rpmbuild commands as documented in this Wiki
-                sh '/usr/bin/bash -ex /usr/local/scripts/build.sh'
+                sh '/usr/bin/bash -x /usr/local/scripts/build.sh'
             }
             post {
                 always {
